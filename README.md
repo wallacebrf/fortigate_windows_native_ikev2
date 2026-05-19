@@ -146,3 +146,76 @@ From the command line of the Linux system go to the same directory where the sig
   <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/eight-files-created.png" alt="export8" />
 </li>
 </ol>
+
+
+## 5.) Import Certificates Into FortiOS
+
+This set of instructions was written around FortiOS 7.4.x, screen images may be different in newer versions
+
+<ol>
+<li>
+  Go to <strong>System --> Certificates --> Create/Import --> CA Certificate</strong>
+</li>
+<li>
+  Click <strong>File</strong> and Click <strong>Upload</strong><br><br>
+  Browse to the location where <strong>ca.crt</strong> is located, select that file and click <strong>Open</strong> and within FortiOS click <strong>OK</strong><br><br>
+  Verify the certificate is loaded and document the name of the certificate. depending on how many other Remote CA Certificates are loaded onto the Fortigate, the value may be different but will be <strong>CA_Cert_x</strong> with x being a number. In this example, the certificate was named <strong>CA_Cert_4</strong><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/CA_cert_loaded.png" alt="CA_cert_loaded" />
+</li>
+<li>
+  Under the Certificates screen --> click <strong>Create/Import --> Certificate</strong>. Select <strong>Import Certificate</strong>. 
+</li>
+<li>
+ Select the <strong>PKCS#12 Certificate</strong> option. 
+</li>
+<li>
+  Click <strong>Upload File</strong> and browse for our <strong>mydomain.p12</strong> file. Enter the password used previously when exporting the file and when creating the certificate. In the <strong>Certificate name</strong> feild, give your certificate a unique name, in our example the certificate was named <strong>mydomain</strong>. Remember the name given as this will be needed for the IPsec tunnel configuration later. Click <strong>Create</strong>
+</li>
+</ol>
+
+## 6.) Create IPSec Tunnel In FortiOS
+<ol>
+<li>Launch the CLI in FortiOS</li>
+<li>
+  We now need to create a Certificate Peer to authenticate against. Ensure the certificate selected is the name FortiOS gavce your imported root CA certificate, in this case <strong>CA_Cert_4</strong>
+
+config user peer<br>
+      edit "<strong>NativeDialup_peer</strong>"<br>
+         set ca "<strong>CA_Cert_4</strong>"<br>
+         set subject "CN=<strong>ipv4.mydomain.com</strong>"<br>
+    next<br>
+end
+</li>
+<li>
+Next we need to create our Phase1 and Phase2 VPN configuration<br><br>
+
+config vpn ipsec phase1-interface<br>
+    edit "windowsIKE2"<br>
+        set type dynamic<br>
+        set interface "wan1"<br>
+        set ike-version 2<br>
+        set authmethod signature<br>
+        set net-device disable<br>
+        set mode-cfg enable<br>
+        set ipv4-dns-server1 8.8.8.8<br>
+        set proposal aes256-sha256 aes128-sha256<br>
+        set localid "<strong>ipv4.mydomain.com</strong>"<br>
+        set dpd on-idle<br>
+        set dhgrp 14<br>
+        set certificate "<strong>mydomain</strong>"
+        set peer "<strong>NativeDialup_peer</strong>"
+        set ipv4-start-ip 10.10.30.1
+        set ipv4-end-ip 10.10.30.20
+        set dpd-retryinterval 60
+    next
+end
+config vpn ipsec phase2-interface
+    edit "windowsIKE2"
+        set phase1name "windowsIKE2"
+        set proposal aes256-sha256 aes128-sha256
+        set pfs disable
+        set keepalive enable
+    next
+end
+</li>
+
