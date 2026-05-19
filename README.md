@@ -114,3 +114,35 @@ This will document how to use Windows 11 Native IPSec IKEv2 VPN, as well as Stro
 </li>
 </ol>
 
+## 4.) Sign Certificate Request and Generate Private Key and Cert Pair
+
+This set of instructions assumes access to a unix based system such as the Windows Subsystem for Linux but does not go into detail on how to set up that system and install openssl. 
+
+From the command line of the Linux system go to the same directory where the signing request and request key files were previously saved. Enter the following command
+<ol>
+<li>
+  Generate our Root Certificate Authority Key file <strong>key.pem</strong><br><br>
+  <strong>openssl genrsa -out key.pem 2048</strong> <br><br>
+</li>
+<li>
+  Generate our root certificate <strong>ca.crt</strong> with a 10-year life span using our previously generated key file<br><br>
+  <strong>openssl req -new -x509 -days 3650 -key key.pem -out ca.crt</strong> <br><br> 
+  During the creation of the certificate, several questions will be asked. press <strong>enter</strong> to leave all feilds blank EXCEPT for the <strong>Common Name (e.g. server GQDN or YOUR name)</strong> feild. This needs to be the same as the domain name used in the signing request <strong>ipv4.mydomain.com</strong><br><br>
+</li>
+<li>
+  Sign our custom Certificate Request file <strong>request.csr</strong> using our new root certificate. This will output a new file <strong>mydomain.pem</strong><br><br>
+  <strong>openssl x509 -req -in request.csr -days 365 -CA ca.crt -CAkey key.pem -CAcreateserial -out mydomain.pem</strong> <br><br>
+</li>
+<li>
+  Extract the signing request key into the <strong>privatekey.pem</strong> format which we require to allow us to password protect embed the key into our certificate. During this process the password created previously when exporting the key from Windows Certificate Manager will need to be entered three different times<br><br>
+  <strong>openssl pkcs12 -in requestkey.pfx -nocerts -out privatekey.pem</strong> <br><br>
+  </li>
+<li>
+  Finally we create our completed <strong>mydomain.p12</strong> certificate with embedded password protected key. During this process the password created previously when exporting the key from Windows Certificate Manager will need to be entered three different times<br><br>
+  <strong>openssl pkcs12 -export -out mydomain.p12 -inkey privatekey.pem -in mydomain.pem</strong> <br><br>
+</li>
+<li>
+  we should now have eight separate files in our working directory. We now need to install the root certificate file <strong>ca.crt</strong> and our personal certificate <strong>mydomain.p12</strong> into FortiOS, Windows, and our Andriod Phone
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/eight-files-created.png" alt="export8" />
+</li>
+</ol>
