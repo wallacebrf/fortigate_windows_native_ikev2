@@ -39,35 +39,78 @@ This will document how to use Windows 11 Native IPSec IKEv2 VPN, as well as Stro
   From the <strong>Details</strong> drop-down menu > Click <strong>Properties.</strong>
   <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/certificate-enrollment-properties.png" alt="certificate-enrollment-properties" />
 </li>
-<li><a href="#radar">radar</a></li>
-<li><a href="#sickchill">sickchill</a></li>
-<li><a href="#nginx_reverse_proxy">nginx Reverse Proxy</a></li>
-<li><a href="#jellyfin">jellyfin</a></li>
-<li><a href="#tautulli">tautulli</a></li>
-<li><a href="#Chromium">Chromium</a></li>
-<li><a href="#Torrent_downloader_VPN">Torrent down-loader + VPN</a></li>
-<li><a href="#ngninx_PHP_Maria_DB_Stack">ngninx + PHP + MySQL Stack + PHPMyAdmin</a></li>
-<li><a href="#urbackup">UrBackup</a></li>
-<li><a href="#Grey_log">Grey log</a></li>
-<li><a href="#flaresolverr">flaresolverr</a></li>
-<li><a href="#ytdlp">YT-DLP</a></li>
-<li><a href="#dozzel">Dozzel</a></li>
-<li><a href="#convertx">ConvertX</a></li>
-</ul>
-<li><a href="#Data_Logging_Exporting_to_Influx_DB_v2">Data Logging Exporting to Influx DB v2</a></li>
-<li><a href="#Install_script_to_pull_TrueNAS_SNMP_data">Install script to pull TrueNAS SNMP data + Non-SNMP Data like GPU Details</a></li>
-<li><a href="#Setup_Grafana_Dashboard_for_TrueNAS">Setup Grafana Dashboard for TrueNAS</a></li>   
-<li><a href="#Setup_Custom_Logging_Scripts_and_Configure_CRON">Setup Custom Logging Scripts and Configure CRON</a></li> 
-<li><a href="#Cloud_backups_to_BackBlaze_B2_Bucket">Cloud backups to BackBlaze B2 Bucket</a></li>
-<li><a href="#Replace_DS_File_app_Android_Only">Replace “DS File” app – Android Only</a></li>
-<li><a href="#Configure_Data_Scrubs">Configure Data Scrubs</a></li>
-<li><a href="#Schedule_SMART_tests">Schedule SMART tests</a></li>
-<li><a href="#Configiure_email_sending_from_CLI">Configure Email Sending From CLI</a></li>
-<li><a href="#Configure_Remote_Access_using_Tail_Scale">Configure Remote Access using Pangolin</a></li>
-<li><a href="#Mount_External_NFS_Shares_into_TrueNAS_Dataset">Mount External NFS Shares into TrueNAS Dataset</a></li>
-<li><a href="#General_Little_Settings_Here_and_There">General Little Settings Here and There</a></li>
-<li><a href="#Rsync_Files_From_Synology_to_TrueNAS">Rsync Files From Synology to TrueNAS</a></li>
-<li><a href="#On_Systems_with_IPMI_supported_motherboards">On Systems with IPMI supported motherboards</a></li>
-<li><a href="#File_Managers">File Managers</a></li>
-<li><a href="#app_backups">Automated APP Backups</a></li>
-  </ol>
+<li>
+  Enter a <strong>Friendly Name</strong> and <strong>Description</strong> of your choosing. Suggest set to ipv4.mydomain.com
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/friendly-name.png" alt="friendly-name" />
+</li>
+<li>
+  Access the <strong>Subject</strong> tab in the <strong>Subject name:</strong> Type: field add the following distinguish name values required for your CSR<br><br>
+  <strong>Common Name</strong> set to the value of ipv4.mydomain.com<br><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/add-subjects.png" alt="add-subjects" />
+</li>
+<li>
+  Access the <strong>Extensions</strong> tab<br><br>
+  Under <strong>Key Usage</strong>, Ensure <strong>Data encipherment</strong> and <strong>Key encipherment</strong> are moved over to the right using the <strong>Add</strong> button<br><br>
+  Under <strong>Extended Key Usage (application policies)</strong> ensure <strong>Server Authentication</strong> and <strong>Client Authentication</strong> are moved over to the right using the <strong>Add</strong> button<br><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/extensions1.png" alt="extensions1" /><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/extensions2.png" alt="extensions2" />
+</li>
+<li>
+  Click the <strong>Private Key</strong> tab > click the drop-down for <strong>Key options</strong> and select <strong>Key size</strong> to be a value of <strong>2048</strong> and check the option to <strong>Make private key exportable</strong> anmd Click <strong>OK</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/make-private-key-exportable.png" alt="make-private-key-exportable" />
+</li>
+<li>
+  Click the drop-down for <strong>Select Hash Algorithm</strong>, under Hash Algorithm select <strong>sha256</strong> and Click <strong>OK</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/select-hash-algorithm.png" alt="select-hash-algorithm" />
+</li>
+<li>
+  Click <strong>Next</strong> and Click <strong>Browse</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/save-the-offiline-request.png" alt="save-the-offiline-request" />
+</li>
+<li>
+  Select a location to save the CSR file. Enter <strong>request.csr</strong> for the file name and click <strong>Save</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/name-csr-file-to-save.png" alt="name-csr-file-to-save" />
+</li>
+<li>
+  Click <strong>Finish</strong> with the file format selected as <strong>Base 64</strong>
+</ol>
+
+
+## 3.) Export Certificate Signing Request Key
+<ol>
+<li>
+  From within Windows Cert Manager, click <strong>Certificate Enrollment Requests --> Certificates</strong><br>
+  <strong>Right Click</strong> on the requtest and select <strong>All Tasks --> Export...</strong><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export1.png" alt="export1" />
+</li>
+<li>
+  Click <strong>Next</strong><br>
+    <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export2.png" alt="export2" />
+</li>
+<li>
+  Select <strong>Yes, export the private key</strong> and click <strong>Next</strong><br>
+    <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export3.png" alt="export3" />
+</li>
+<li>
+  Ensure all checkboxes are chosen <strong>EXCEPT</strong> for <strong>Delete the private key if export is sucessful</strong><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export4.png" alt="export4" />
+</li>
+<li>
+  Create and Confirm a password. This password will be needed again laster when making our certificates. Ensure the <strong>Encryption</strong> is set to <strong>AES256-SHA256</strong> and click <strong>Next</strong><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export5.png" alt="export5" />
+</li>
+<li>
+  Click <strong>Browse</strong> and save the key to the same place the signing request file was previously saved. Save the key file as file name <strong>requestkey.pfx</strong> and click <strong>Next</strong><br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export6.png" alt="export6" />
+</li>
+<li>
+  Click <strong>Finish</strong><br>
+    <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export7.png" alt="export7" />
+  </li>
+<li>
+ From within Windows Cert Manager, click <strong>Certificate Enrollment Requests --> Certificates</strong><br>
+  <strong>Right Click</strong> on the requtest and select <strong>Delete</strong> and confirm when the popup asks<br>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/export8.png" alt="export8" />
+</li>
+</ol>
+
