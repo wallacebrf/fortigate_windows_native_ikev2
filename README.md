@@ -7,26 +7,38 @@ This will document how to use Windows 11 Native IPSec IKEv2 VPN, as well as Stro
 
 ## 2.) Create Certificate Signing Request
 <ol>
-<li>From Microsoft Windows, click **Start.**</li>
-<li>In the Search programs and files field, type **mmc.**</li>
-<li>Click  **File > Add/Remove Snap-in.**</li>
-<li>From the list of available snap-ins, select **Certificates.**</li>
-<li>Click **Add.**</li>
-<li>Select **Computer account.** </li>
-<li>Click **Next.**</li>
-<li>Select **Local computer **(the computer this console is running on).</li>
-<li>Click **Finish.**</li>
-<li>In the Add/Remove Snap-in window, click **OK.**</li>
+<li>From Microsoft Windows, click <strong>Start.</strong></li>
+<li>In the Search programs and files field, type <strong>mmc.</strong></li>
+<li>Click  <strong>File > Add/Remove Snap-in.</strong></li>
+<li>From the list of available snap-ins, select <strong>Certificates.</strong></li>
+<li>Click <strong>Add.</strong></li>
+<li>Select <strong>Computer account.</strong> </li>
+<li>Click <strong>Next.</strong></li>
+<li>Select <strong>Local computer </strong>(the computer this console is running on).</li>
+<li>Click <strong>Finish.</strong></li>
+<li>In the Add/Remove Snap-in window, click <strong>OK.</strong></li>
 <li>Save these console settings for future use.</li>
-<li>Access your MMC snap in > right click the **Personal** folder.</li>
+<li>Access your MMC snap in > right click the <strong>Personal</strong> folder.</li>
 <li>
-  Select **All Tasks > Advanced Operations > Create Custom Request.**
-  ![create-custom-request](https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/create-custom-request.png)
+  Select <strong>All Tasks > Advanced Operations > Create Custom Request.</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/create-custom-request.png" alt="create-custom-request" />
 </li>
-<li><a href="#Grafana">Grafana</a></li>
-<li><a href="#influxDB">influxDB</a></li>
-<li><a href="#jackett">jackett</a></li>
-<li><a href="#plex">plex</a></li>
+<li>
+  The CSR generation wizard will open > Click <strong>Next.</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/before-you-begin.png" alt="before-you-begin" />
+</li>
+<li>
+  Select the option to <strong>Proceed without enrollment policy</strong> > Click <strong>Next.</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/proceed-without-enrollment-policy.png" alt="proceed-without-enrollment-policy" />
+</li>
+<li>
+  Click <strong>Next</strong> at the PKCS # 10 window.
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/select-pkcs-10.png" alt="select-pkcs-10" />
+</li>
+<li>
+  From the <strong>Details</strong> drop-down menu > Click <strong>Properties.</strong>
+  <img src="https://raw.githubusercontent.com/wallacebrf/fortigate_windows_native_ikev2/refs/heads/main/images/certificate-enrollment-properties.png" alt="certificate-enrollment-properties" />
+</li>
 <li><a href="#radar">radar</a></li>
 <li><a href="#sickchill">sickchill</a></li>
 <li><a href="#nginx_reverse_proxy">nginx Reverse Proxy</a></li>
